@@ -13,11 +13,16 @@ const sdk = new ThirdwebSDK("rinkeby");
 // We can grab a reference to our ERC-1155 contract.
 const bundleDropModule = sdk.getBundleDropModule(
   process.env.REACT_APP_DROP_MODULE_ADDRESS,
-  );
+);
   
 // We can grab a reference to our ERC-20 contract.
 const tokenModule = sdk.getTokenModule(
   process.env.REACT_APP_TOKEN_MODULE,
+);
+
+// We can grab a reference to our Vote module.
+const voteModule = sdk.getVoteModule(
+  process.env.REACT_APP_VOTE_MODULE,
 );
 
 const App = () => {
@@ -40,6 +45,52 @@ const App = () => {
   
   // The array holding all of our members addresses.
   const [memberAddresses, setMemberAddresses] = useState([]);
+
+  const [proposals, setProposals] = useState([]);
+  const [isVoting, setIsVoting] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
+
+  // Retrieve all our existing proposals from the contract.
+  useEffect(() => {
+    if (!hasClaimedNFT) {
+      return;
+    }
+    // A simple call to voteModule.getAll() to grab the proposals.
+    voteModule
+      .getAll()
+      .then((proposals) => {
+        // Set state!
+        setProposals(proposals);
+        console.log("🌈 Proposals:", proposals)
+      })
+      .catch((err) => {
+        console.error("failed to get proposals", err);
+      });
+  }, [hasClaimedNFT]);
+
+  // We also need to check if the user already voted.
+  useEffect(() => {
+    if (!hasClaimedNFT) {
+      return;
+    }
+
+    // If we haven't finished retrieving the proposals from the useEffect above
+    // then we can't check if the user voted yet!
+    if (!proposals.length) {
+      return;
+    }
+
+    // Check if the user has already voted on the first proposal.
+    voteModule
+      .hasVoted(proposals[0].proposalId, address)
+      .then((hasVoted) => {
+        setHasVoted(hasVoted);
+        console.log("🥵 User has already voted")
+      })
+      .catch((err) => {
+        console.error("failed to check if wallet has voted", err);
+      });
+  }, [hasClaimedNFT, proposals, address]);
 
   // A fancy function to shorten someones wallet address, no need to show the whole thing. 
   const shortenAddress = (str) => {
