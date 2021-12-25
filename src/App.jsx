@@ -28,7 +28,7 @@ const voteModule = sdk.getVoteModule(
 const App = () => {
   // Use the connectWallet hook thirdweb gives us.
   const { connectWallet, address, error, provider } = useWeb3();
-  console.log("👋 Address:", address)
+  // console.log("👋 Address:", address)
   
   // The signer is required to sign transactions on the blockchain.
   // Without it we can only read data, not write.
@@ -61,7 +61,7 @@ const App = () => {
       .then((proposals) => {
         // Set state!
         setProposals(proposals);
-        console.log("🌈 Proposals:", proposals)
+        // console.log("🌈 Proposals:", proposals)
       })
       .catch((err) => {
         console.error("failed to get proposals", err);
@@ -85,7 +85,7 @@ const App = () => {
       .hasVoted(proposals[0].proposalId, address)
       .then((hasVoted) => {
         setHasVoted(hasVoted);
-        console.log("🥵 User has already voted")
+        // console.log("🥵 User has already voted")
       })
       .catch((err) => {
         console.error("failed to check if wallet has voted", err);
@@ -108,7 +108,7 @@ const App = () => {
     bundleDropModule
       .getAllClaimerAddresses("0")
       .then((addresess) => {
-        console.log("🚀 Members addresses", addresess)
+        // console.log("🚀 Members addresses", addresess)
         setMemberAddresses(addresess);
       })
       .catch((err) => {
@@ -126,7 +126,7 @@ const App = () => {
     tokenModule
       .getAllHolderBalances()
       .then((amounts) => {
-        console.log("👜 Amounts", amounts)
+        // console.log("👜 Amounts", amounts)
         setMemberTokenAmounts(amounts);
       })
       .catch((err) => {
@@ -169,10 +169,10 @@ const App = () => {
         // If balance is greater than 0, they have our NFT!
         if (balance.gt(0)) {
           setHasClaimedNFT(true);
-          console.log("🌟 this user has a membership NFT!")
+          // ("🌟 this user has a membership NFT!")
         } else {
           setHasClaimedNFT(false);
-          console.log("😭 this user doesn't have a membership NFT.")
+          // console.log("😭 this user doesn't have a membership NFT.")
         }
       })
       .catch((error) => {
@@ -310,7 +310,7 @@ const App = () => {
                       // if we get here that means we successfully voted, so let's set the "hasVoted" state to true
                       setHasVoted(true);
                       // and log out a success message
-                      console.log("successfully voted");
+                      // console.log("successfully voted");
                     } catch (err) {
                       console.error("failed to execute votes", err);
                     }
